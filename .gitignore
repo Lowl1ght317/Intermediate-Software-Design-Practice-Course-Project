@@ -1,7 +1,47 @@
-﻿target/
+# ---------- 构建产物 ----------
+target/
+build/
+out/
+bin/
 *.class
 *.jar
+*.war
+*.ear
+*.flattened-pom.xml
+.flattened-pom.xml
+**/.flattened-pom.xml
+
+# ---------- 依赖与本机 Maven 仓库缓存 ----------
+.m2-verify/
+.mvn/wrapper/maven-wrapper.jar
+node_modules/
+
+# ---------- 本机运行环境（每台机器不一样，不入库） ----------
+.runtime/            # 本地 nginx、日志、数据库备份、实验记录
+release/             # 课程提供的预编译前端 dist（含 nginx 与二进制）
+sie-grant/           # 课程提供的授权服务 exe
+acl-recovery/        # 修 ACL 时的备份
+_archive/            # 早期试做工程
+iidp-backend-demo/.idea/
+iidp-backend-demo/.git/
+iidp-backend-demo/logs/
+iidp-backend-demo/apps/modules/*.jar   # 平台官方 jar 与自研构建产物，见该目录 README
+
+# ---------- 日志与临时文件 ----------
+*.log
+logs/
+*.tmp
+*.bak
+*.orig
+*.keep
+*.cwbak
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+
+# ---------- 生成的文档中间产物 ----------
 docs/preview/
 docs/preview.pdf
 docs/ppt_preview.pdf
-.flattened-pom.xml
+docs/_probe.docx

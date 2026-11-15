@@ -2,7 +2,7 @@
 
 > 《中级软件设计实作》课程项目 · 课题一 MES 管理系统 · 基于赛意 IIDP 模型驱动低代码平台的三个业务 APP
 
-一个人、两周、从零到跑通：三个 Maven APP 模块、六张业务表、九个自定义服务、三张真实运行截图、12 条接口级测试用例全部通过，外加 55 页开发文档与 14 页汇报 PPT。
+一个人、两周，从零到跑通：三个 Maven APP 模块、六张业务表、九个自定义服务、三张真实运行截图、12 条接口级测试用例全部通过，外加 55 页开发文档与 14 页汇报 PPT。
 
 ![产品列表页](docs/figs/fig6-1_ui_list.png)
 
@@ -57,62 +57,131 @@
 | --- | --- |
 | 后端 | Java 8、Spring Boot 2.7.13（引擎底座）、IIDP 引擎 v3.0.1-HOTFIX.002、SDK v3.0.1-UAT.003 |
 | 构建 | Maven 3.9.1（离线构建，本地仓库 `D:\maven\repository`） |
-| 数据库 | MySQL 8（库 `iidp_demo_v3`，六张业务表由模型注解自动建） |
+| 数据库 | MySQL 8（库 `iidp_demo_v3`，字符集 utf8mb4 / utf8mb4_bin，六张业务表由模型注解自动建） |
 | 缓存 | Redis（db5） |
 | 前端 | 平台预编译 dist + nginx（30666），页面由视图 JSON 动态渲染，前端零代码 |
 | 对象存储 | MinIO（19000，平台附件用） |
 | 文档 | python-docx 生成 docx、python-pptx 生成 PPT、matplotlib 画图 |
 
-## 目录结构
+## 仓库结构
 
 ```
 .
+├── start-all.ps1 / stop-all.ps1                      # 一键启动 / 停止（Windows）
 ├── README.md
-├── 校园文创产品生产管理系统-项目开发文档.docx / .pdf     # 55 页，10 章
-├── 校园文创产品生产管理系统-项目汇报.pptx                # 14 页
-├── source/                                            # 三个 APP 模块源码
-│   ├── sie-snest-cw-base/    product / material / product_bom
-│   ├── sie-snest-cw-prod/    work_order
-│   └── sie-snest-cw-sys/     code_rule / code_seq + 编码服务
+├── 校园文创产品生产管理系统-项目开发文档.docx / .pdf     # 55 页 10 章
+├── 校园文创产品生产管理系统-项目汇报.pptx                # 14 页答辩用
+├── 作业选题.docx / 项目作品要求.docx                    # 课程原始要求
+├── iidp-backend-demo/                                # 完整后端工程（含课程参考程序）
+│   ├── pom.xml / settings.xml                        # 聚合 pom、镜像与本地仓库配置
+│   ├── apps/
+│   │   ├── apps.json                                 # 装载清单（官方 11 个 + cw 三个）
+│   │   └── modules/README.md                         # 需要放哪些 jar（jar 本身不入库）
+│   ├── sql/                                          # 平台初始化脚本
+│   ├── sie-iidp-demo-apps/                           # 自研 APP 模块
+│   │   ├── sie-snest-cw-base/   product / material / product_bom
+│   │   ├── sie-snest-cw-prod/   work_order
+│   │   ├── sie-snest-cw-sys/    code_rule / code_seq + 编码服务
+│   │   └── sie-snest-mes/       （课程参考示例，未改动）
+│   ├── sie-iidp-demo-common/
+│   └── sie-iidp-demo-start/                          # 引擎启动模块与配置
 └── docs/
     ├── md/ch01.md … ch07.md    # 文档源（1–10 章）
-    ├── figs/                   # 15 张图（用例、架构、ER、类图、时序、状态、截图）
+    ├── figs/                   # 15 张图（用例、架构、ER、类图、时序、状态、真实截图）
     ├── build.py                # markdown → docx
     ├── figs.py                 # 全部插图的生成脚本
     └── make_ppt.py             # 汇报 PPT 生成脚本
 ```
 
-## 快速开始
+## 环境准备
 
-前提：JDK 8、Maven、MySQL 8、Redis、IIDP 引擎包（课程提供）、nginx 与平台前端 dist（课程提供）。
+必装：JDK 1.8、Maven 3.9.1、MySQL 8、Redis、nginx。
 
-```bash
-# 1. 构建三个 APP（产物自动复制到 apps/modules）
-mvn -s settings.xml -o -DskipTests package
+课程会提供三样东西，**不在本仓库里**（属于课程环境，体积大或为二进制）：
 
-# 2. 启四个进程：Redis(6379) → 授权服务 grant-dev(8080) → 引擎(8061) → nginx(30666)
-java -jar sie-iidp-demo-start/target/sie-iidp-demo-start-1.0-SNAPSHOT.jar
+1. **11 个平台官方 jar**：放到 `iidp-backend-demo/apps/modules/`，清单见该目录的 `README.md`
+2. **预编译前端 dist**（含 nginx 配置与 `html/`）：课程发的 `release/` 目录
+3. **授权服务 `grant-dev.exe`**：放到 `sie-grant/`
 
-# 3. 浏览器打开 http://localhost:30666/iidp/
+本机目录约定（换机器改脚本顶部与 `dbcp.properties` 即可）：
+
+| 用途 | 路径 |
+| --- | --- |
+| JDK | `D:\Java\JDK1.8` |
+| Maven | `E:\maven\apache-maven-3.9.1` |
+| 本地仓库 | `D:\maven\repository` |
+| Redis | `E:\redis\redis-server.exe` |
+| nginx | `.runtime\nginx-windows\nginx-1.30.6-windows` |
+| 授权服务 | `sie-grant\grant-dev.exe` |
+
+## 一键启动
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned   # 只需一次
+.\start-all.ps1            # 启动 MySQL -> Redis -> grant -> 引擎 -> nginx
+.\start-all.ps1 -Build     # 先 mvn package 再启动
+.\stop-all.ps1             # 停引擎 / nginx / 授权服务（Redis 与 MySQL 保留）
 ```
 
-账号：`admin_000001 / Admin_000001`。
+脚本会逐项检查端口、跳过已在运行的进程，最后打印端口状态与登录地址；日志写在 `.runtime\logs\`。
 
-配置只改三处：`dbcp.properties` 的数据库连接、`application-dev.properties` 的 `image.minimal.requiredApps`（追加 cw 三个 APP）、`apps/apps.json` 的 SDK 列表。
+启动完成后打开 **http://localhost:30666/iidp/**，账号 `admin_000001 / Admin_000001`（平台租户管理员是 `implementer / Implementer_2023`）。
 
-> **注意**：改 `application-dev.properties` 后必须重新打包才生效；重启前先停 java 进程，否则 `apps/modules` 下的 jar 被占用。
+### 手动启动（课程里的顺序）
 
-### 一个必须手动补的授权
+| 步 | 启动 | 端口 |
+| --- | --- | --- |
+| 0 | MySQL（Windows 服务，库 `iidp_demo_v3`，utf8mb4 / utf8mb4_bin） | 3306 |
+| 1 | `E:\redis\redis-server.exe` | 6379 |
+| 2 | `sie-grant\grant-dev.exe`（建议用 CMD 起） | 8080 |
+| 3 | 引擎 `DemoServer`（IDE 跑要选对工作目录，见下） | 8061 |
+| 4 | nginx（`html/dist` 指向课程前端 dist） | 30666 |
 
-自研 APP 的菜单要显示，除了 `tenant_meta_mapping` 里的菜单映射，还需要**应用级授权**（这一步平台 UI 会写，手工部署容易漏）：
+引擎两种起法：
+
+```powershell
+# a) jar 方式（工作目录必须是 iidp-backend-demo）
+cd iidp-backend-demo
+java -jar sie-iidp-demo-start\target\sie-iidp-demo-start-1.0-SNAPSHOT.jar
+
+# b) IDE 方式：运行 com.sie.iidp.demo.service.DemoServer 的 main
+#    Run → Edit Configurations → Working directory 设为 ...\iidp-demo-3.0\iidp-backend-demo
+#    VM options 加 -Dfile.encoding=UTF-8
+```
+
+引擎按相对路径读 `apps/apps.json` 与 `apps/modules/*.jar`，工作目录填错就会报"元模型[null]在引擎容器中不存在"。
+
+### 两个"改了没生效"的注意点
+
+1. **改 `application-dev.properties` 必须重新打包**，否则运行的还是打进 jar 里的旧配置：
+   ```powershell
+   $env:JAVA_HOME='D:\Java\JDK1.8'
+   $env:MAVEN_ARGS='-Dmaven.repo.local=D:\maven\repository'
+   mvn -s settings.xml -o -DskipTests -pl sie-iidp-demo-start -am package
+   ```
+2. **重启前先停 java 进程**，否则构建时 `apps\modules\*.jar` 被占用，报"另一个程序正在使用此文件"。
+
+## 三个必须知道的坑
+
+### 1. 菜单不显示：缺应用级授权
+
+除了 `tenant_meta_mapping` 里的菜单映射，自研 APP 还需要 `rbac_role_auth` 的**应用级授权**（平台 UI 的"租户授权"会写，手工部署容易漏）。缺这几行时 `ui_menu.loadMenu` 返回空数组，登录后左侧菜单是空的。
 
 ```sql
 INSERT INTO rbac_role_auth (id, version, app_all, app_tag, role, app_name, tenant_id, create_user, create_date)
 SELECT REPLACE(UUID(),'-',''), 0, '1', 'master', 'rbac_role_admin', 'cw-base', 'rbac_tenant_root', 'admin', NOW();
--- 同理补 cw-prod、cw-sys，以及目标角色的行
+-- 同理补 cw-prod、cw-sys，以及目标角色
 ```
 
-缺这几行时，`ui_menu.loadMenu` 返回空数组，页面白屏——这是本项目花时间最多的坑，排查全过程写在文档 6.9 节。
+排查全过程写在文档 6.9.2。
+
+### 2. 启动即崩：`apps/modules` 里有重复版本 jar
+
+`SingleAppLoader.listLocalAppsByJson()` 解析出 `null` 元素，引擎在 `AppProcessor.toMap()` 抛 NPE。把同一 APP 的 `-RELEASE` 与 `-UAT` 并存、或示例工程的 mes jar 混在里面就会触发。清理成"11 个官方 + 3 个自研"。
+
+### 3. `app.json` 的 `product` 字段不能重复
+
+它决定左侧入口（产品线）。两个 APP 用同一个 `product` 会导致其中一个不显示入口。本项目用 `CW-BASE` / `CW-PROD` / `CW-SYS`。
 
 ## 关键实现
 
@@ -137,6 +206,7 @@ UPDATE cw_code_seq SET curr_value = curr_value + 1 WHERE id = ? AND curr_value =
 | 菜单空白 | 缺 `rbac_role_auth` 应用级授权，不是菜单表的问题 |
 | 服务调不到 | SDK 只扫描 `@Model` 类上的 `@MethodService`，独立 `@Service` 类不生效 |
 | 查询恒空 | `search(filter, properties, ...)` 的 `properties` 传 null 时引擎拼不出 SELECT 列 |
+| 关联字段过滤不到 | `Filter` 对 `@ManyToOne` 字段恒为空，改原生 SQL；写入关联字段要传主键字符串 |
 | 平台 `create` 服务 500 | 该版本 `BussModelDataAccess.create` 取不到记录列表，改用自研服务 |
 
 ## 文档
@@ -157,4 +227,4 @@ UPDATE cw_code_seq SET curr_value = curr_value + 1 WHERE id = ? AND curr_value =
 
 ## 致谢
 
-赛意 IIDP 平台与课程提供的参考程序（`iidp-backend-demo`）提供了技术栈基线；本文档与代码里的业务设计均为原创。
+赛意 IIDP 平台与课程提供的参考程序（`iidp-backend-demo` 中的 `sie-snest-mes` 示例、`apps/modules` 官方包）提供了技术栈基线；本项目的业务设计、三个 APP 模块与全部文档均为原创。
