@@ -4,7 +4,7 @@
 
 课程实作项目：三个 Maven APP 模块、六张业务表、九个自定义服务，配 56 页开发文档。当前状态是"接口层跑通、界面基本可用"，还没做完的部分写在文末的「已知限制」里。
 
-![产品列表页](docs/figs/fig6-1_ui_list.png)
+![产品列表页](images/fig6-1_ui_list.png)
 
 ## 这是什么
 
@@ -21,11 +21,11 @@
 
 表单页与 BOM 标签页——主子表在同一页维护，标签题上直接带明细条数：
 
-![产品表单与 BOM](docs/figs/fig6-2_ui_form.png)
+![产品表单与 BOM](images/fig6-2_ui_form.png)
 
 编码规则页——三条规则（WO/MT/CP）同表维护，改完立即对后续取号生效：
 
-![编码规则](docs/figs/fig6-3_ui_rule.png)
+![编码规则](images/fig6-3_ui_rule.png)
 
 ## 课题九条要求怎么落的
 
@@ -43,7 +43,7 @@
 
 ## 架构
 
-![系统架构](docs/figs/fig4-1_arch.png)
+![系统架构](images/fig4-1_arch.png)
 
 - **cw-base**：产品、物料、产品 BOM（主数据）
 - **cw-prod**：生产工单（跨 APP 用 `@ManyToOne(targetModel = "product")` 弱引用产品，不直接 import 对方类）
@@ -69,8 +69,6 @@
 .
 ├── start-all.ps1 / stop-all.ps1                      # 一键启动 / 停止（Windows）
 ├── README.md
-├── 校园文创产品生产管理系统-项目开发文档.docx / .pdf     # 55 页 10 章
-├── 作业选题.docx / 项目作品要求.docx                    # 课程原始要求
 ├── iidp-backend-demo/                                # 完整后端工程（含课程参考程序）
 │   ├── pom.xml / settings.xml                        # 聚合 pom、镜像与本地仓库配置
 │   ├── apps/
@@ -84,11 +82,7 @@
 │   │   └── sie-snest-mes/       （课程参考示例，未改动）
 │   ├── sie-iidp-demo-common/
 │   └── sie-iidp-demo-start/                          # 引擎启动模块与配置
-└── docs/
-    ├── md/ch01.md … ch07.md    # 文档源（1–10 章）
-    ├── figs/                   # 15 张图（用例、架构、ER、类图、时序、状态、真实截图）
-    ├── build.py                # markdown → docx
-    └── figs.py                 # 全部插图的生成脚本
+└── images/                   # README 里用到的 4 张图（其余插图见开发文档）
 ```
 
 ## 环境准备
@@ -159,6 +153,41 @@ java -jar sie-iidp-demo-start\target\sie-iidp-demo-start-1.0-SNAPSHOT.jar
    ```
 2. **重启前先停 java 进程**，否则构建时 `apps\modules\*.jar` 被占用，报"另一个程序正在使用此文件"。
 
+## 把工程同步给组员
+
+仓库里只有代码、脚本、文档成品和 4 张 README 插图；三样课程环境的东西（11 个官方 jar、前端 dist、`grant-dev.exe`）体积大或不能公开分发，需要单独给。
+
+**第一步，组员克隆仓库**（把 `<url>` 换成仓库地址）：
+
+```powershell
+git clone <url> campus-cw
+cd campus-cw
+```
+
+**第二步，补三个外部件**（从课程资料或你手里拷）：
+
+| 放到哪 | 放什么 |
+| --- | --- |
+| `iidp-backend-demo\apps\modules\` | 课程提供的 11 个官方 jar（文件名清单见该目录的 `README.md`） |
+| `release\iidp-frontend-dist-20261028\` | 课程发的前端 dist（nginx 配置里指向它） |
+| `sie-grant\` | `grant-dev.exe` |
+
+**第三步，建库**：MySQL 里建 `iidp_demo_v3`，字符集 `utf8mb4`、排序规则 `utf8mb4_bin`；如果拿到的是你导出的库，直接 `mysql --default-character-set=utf8mb4 -u root -p iidp_demo_v3 < dump.sql` 导入，再执行一次 `iidp-backend-demo\sql\platform-web-app-init.sql`。
+
+**第四步，改本机路径**：`start-all.ps1` 顶部的 `$JavaHome`、`$MavenHome`、`$MavenRepo`、`$RedisExe`、`$NginxHome` 五个变量，以及 `iidp-backend-demo\sie-iidp-demo-start\src\main\resources\dbcp.properties` 里的数据库地址与密码。
+
+**第五步，跑起来**：
+
+```powershell
+.\start-all.ps1 -Build
+```
+
+看到 `Started DemoServer` 且 30666/8061 都通，就算同步成功。首次登录用 `admin_000001 / Admin_000001`；如果左侧菜单是空的，按下面第 1 个坑补 `rbac_role_auth`。
+
+**如果你要用 GitHub 协作**：在仓库 Settings → Collaborators 里把组员的 GitHub 账号加进来（write 权限），他就能直接 `git push`；不想给写权限就让他 fork 后提 Pull Request。代码改动集中在 `sie-iidp-demo-apps/sie-snest-cw-*/`，两个人分开改不同 APP 时冲突很少；改同一个文件前先说一声，pull 一下再动手。
+
+**如果组员环境跑不起来**，最快的对齐方式是把你本机的 `iidp_demo_v3` 导出成 SQL 一起发过去——菜单、授权、编码规则、测试数据全在里面，比让他照着文档一步步配快得多。
+
 ## 三个必须知道的坑
 
 ### 1. 菜单不显示：缺应用级授权
@@ -213,10 +242,9 @@ UPDATE cw_code_seq SET curr_value = curr_value + 1 WHERE id = ? AND curr_value =
 
 ## 文档
 
-| 文件 | 说明 |
-| --- | --- |
-| `校园文创产品生产管理系统-项目开发文档.pdf` | 56 页 10 章：需求、可行性、概要设计、详细设计、实现、分工、学习与中期检查、过程管理、总结 |
-| `docs/md/` | 文档 Markdown 源，改完跑 `python docs/build.py` 重新出稿 |
+开发文档（`校园文创产品生产管理系统-项目开发文档.docx` / `.pdf`，56 页 10 章：需求、可行性、概要设计、详细设计、实现、分工、学习与中期检查、过程管理、总结）按课程提交渠道单独交，**不放在仓库里**。
+
+文档的 Markdown 源与插图（`docs/md/`、`docs/figs.py`、`docs/build.py`）也只留在本地。仓库里只保留 README 用到的 4 张图，跑文档不依赖仓库。
 
 文档里的图全部由 `docs/figs.py` 用 matplotlib 生成（用例图、分层架构、功能结构、ER 图、类图、时序图、活动图、状态图），截图则是真实运行环境所拍。
 
