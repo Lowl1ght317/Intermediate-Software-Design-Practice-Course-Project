@@ -2,7 +2,7 @@
 
 > 《中级软件设计实作》课程项目 · 课题一 MES 管理系统 · 基于赛意 IIDP 模型驱动低代码平台的三个业务 APP
 
-一个人、两周，从零到跑通：三个 Maven APP 模块、六张业务表、九个自定义服务、三张真实运行截图、12 条接口级测试用例全部通过，外加 55 页开发文档与 14 页汇报 PPT。
+课程实作项目：三个 Maven APP 模块、六张业务表、九个自定义服务，配 55 页开发文档。当前状态是"接口层跑通、界面基本可用"，还没做完的部分写在文末的「已知限制」里。
 
 ![产品列表页](docs/figs/fig6-1_ui_list.png)
 
@@ -61,7 +61,7 @@
 | 缓存 | Redis（db5） |
 | 前端 | 平台预编译 dist + nginx（30666），页面由视图 JSON 动态渲染，前端零代码 |
 | 对象存储 | MinIO（19000，平台附件用） |
-| 文档 | python-docx 生成 docx、python-pptx 生成 PPT、matplotlib 画图 |
+| 文档 | python-docx 生成 docx、matplotlib 画图 |
 
 ## 仓库结构
 
@@ -70,7 +70,6 @@
 ├── start-all.ps1 / stop-all.ps1                      # 一键启动 / 停止（Windows）
 ├── README.md
 ├── 校园文创产品生产管理系统-项目开发文档.docx / .pdf     # 55 页 10 章
-├── 校园文创产品生产管理系统-项目汇报.pptx                # 14 页答辩用
 ├── 作业选题.docx / 项目作品要求.docx                    # 课程原始要求
 ├── iidp-backend-demo/                                # 完整后端工程（含课程参考程序）
 │   ├── pom.xml / settings.xml                        # 聚合 pom、镜像与本地仓库配置
@@ -89,8 +88,7 @@
     ├── md/ch01.md … ch07.md    # 文档源（1–10 章）
     ├── figs/                   # 15 张图（用例、架构、ER、类图、时序、状态、真实截图）
     ├── build.py                # markdown → docx
-    ├── figs.py                 # 全部插图的生成脚本
-    └── make_ppt.py             # 汇报 PPT 生成脚本
+    └── figs.py                 # 全部插图的生成脚本
 ```
 
 ## 环境准备
@@ -214,7 +212,6 @@ UPDATE cw_code_seq SET curr_value = curr_value + 1 WHERE id = ? AND curr_value =
 | 文件 | 说明 |
 | --- | --- |
 | `校园文创产品生产管理系统-项目开发文档.pdf` | 55 页 10 章：需求、可行性、概要设计、详细设计、实现、分工、学习与中期检查、过程管理、总结 |
-| `校园文创产品生产管理系统-项目汇报.pptx` | 14 页答辩用 |
 | `docs/md/` | 文档 Markdown 源，改完跑 `python docs/build.py` 重新出稿 |
 
 文档里的图全部由 `docs/figs.py` 用 matplotlib 生成（用例图、分层架构、功能结构、ER 图、类图、时序图、活动图、状态图），截图则是真实运行环境所拍。
