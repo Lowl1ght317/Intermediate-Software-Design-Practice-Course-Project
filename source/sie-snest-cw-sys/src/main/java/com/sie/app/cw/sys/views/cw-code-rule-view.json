@@ -1,0 +1,135 @@
+{
+  "views": {
+    "code_rule_grid": {
+      "body": {
+        "buttons": [
+          {
+            "action": "preview",
+            "auth": "read",
+            "name": "详情"
+          },
+          {
+            "action": "edit",
+            "auth": "update",
+            "name": "编辑"
+          }
+        ],
+        "columns": [
+          {
+            "displayName": "规则编码",
+            "name": "ruleCode",
+            "sortable": true,
+            "width": "120px"
+          },
+          {
+            "displayName": "规则名称",
+            "name": "ruleName"
+          },
+          {
+            "displayName": "编码前缀",
+            "name": "prefix"
+          },
+          {
+            "displayName": "日期格式",
+            "name": "dateFormat"
+          },
+          {
+            "displayName": "流水号位数",
+            "name": "seqLength"
+          },
+          {
+            "displayName": "是否启用",
+            "name": "enabled"
+          }
+        ],
+        "tbar": [
+          {
+            "action": "create",
+            "auth": "create",
+            "name": "新增"
+          },
+          {
+            "action": "delete",
+            "auth": "delete",
+            "name": "删除"
+          }
+        ],
+        "type": "grid"
+      },
+      "mode": "primary",
+      "model": "code_rule",
+      "name": "编码规则-表格",
+      "type": "grid"
+    },
+    "code_rule_form": {
+      "body": {
+        "buttons": [
+          {
+            "action": "preview",
+            "auth": "read",
+            "name": "预览编码"
+          }
+        ],
+        "columns": [
+          {
+            "displayName": "规则编码",
+            "name": "ruleCode"
+          },
+          {
+            "displayName": "规则名称",
+            "name": "ruleName"
+          },
+          {
+            "displayName": "编码前缀",
+            "name": "prefix"
+          },
+          {
+            "displayName": "日期格式",
+            "name": "dateFormat"
+          },
+          {
+            "displayName": "分隔符",
+            "name": "separator"
+          },
+          {
+            "displayName": "流水号位数",
+            "name": "seqLength"
+          },
+          {
+            "displayName": "是否启用",
+            "name": "enabled"
+          }
+        ],
+        "tabs": [],
+        "type": "form"
+      },
+      "mode": "primary",
+      "model": "code_rule",
+      "name": "编码规则-表单",
+      "type": "form"
+    },
+    "code_rule_search": {
+      "body": {
+        "columns": [
+          {
+            "displayName": "规则编码",
+            "name": "ruleCode"
+          },
+          {
+            "displayName": "规则名称",
+            "name": "ruleName"
+          },
+          {
+            "displayName": "是否启用",
+            "name": "enabled"
+          }
+        ],
+        "type": "search"
+      },
+      "mode": "primary",
+      "model": "code_rule",
+      "name": "编码规则-搜索",
+      "type": "search"
+    }
+  }
+}

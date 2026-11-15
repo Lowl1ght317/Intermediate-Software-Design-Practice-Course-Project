@@ -1,0 +1,21 @@
+{
+  "menus": {
+    "cw_prod_root_menu": {
+      "name": "cw_prod_root_menu",
+      "display_name": "校园文创-生产管理",
+      "active": true,
+      "sequence": 11
+    },
+    "cw_work_order_menu": {
+      "name": "cw_work_order_menu",
+      "display_name": "生产工单",
+      "model": "work_order",
+      "view": "work_order_grid,work_order_search,work_order_form",
+      "sequence": 1,
+      "active": true,
+      "parent_ids": {
+        "@ref": "cw_prod_root_menu"
+      }
+    }
+  }
+}

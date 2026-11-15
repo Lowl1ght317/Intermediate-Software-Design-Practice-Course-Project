@@ -1,0 +1,22 @@
+{
+  "name": "cw-prod",
+  "displayName": "校园文创-生产管理",
+  "author": "sie",
+  "company": "sie",
+  "category": "CW",
+  "product": "CW-PROD",
+  "description": "校园文创产品生产管理-生产工单（设计→打样→批量制作→入库）",
+  "summary": "校园文创生产管理",
+  "type": "SDK",
+  "tag": "master",
+  "version": "0.0.1",
+  "resolved": "com.sie.app.cw.prod",
+  "dependencies": [],
+  "application": true,
+  "icon": null,
+  "license": "LGPL 3.0",
+  "view": [
+    "cw-work-order-view.json"
+  ],
+  "data": []
+}

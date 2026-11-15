@@ -1,0 +1,116 @@
+{
+  "views": {
+    "work_order_grid": {
+      "body": {
+        "buttons": [
+          {
+            "action": "preview",
+            "auth": "read",
+            "name": "详情"
+          },
+          {
+            "action": "edit",
+            "auth": "update",
+            "name": "编辑"
+          }
+        ],
+        "columns": [
+          {
+            "displayName": "工单编码",
+            "name": "code",
+            "sortable": true,
+            "width": "160px"
+          },
+          {
+            "displayName": "文创产品",
+            "name": "product"
+          },
+          {
+            "displayName": "计划数量",
+            "name": "planQty"
+          },
+          {
+            "displayName": "工单状态",
+            "name": "status"
+          },
+          {
+            "displayName": "计划日期",
+            "name": "planDate"
+          }
+        ],
+        "tbar": [
+          {
+            "action": "create",
+            "auth": "create",
+            "name": "新增"
+          },
+          {
+            "action": "delete",
+            "auth": "delete",
+            "name": "删除"
+          }
+        ],
+        "type": "grid"
+      },
+      "mode": "primary",
+      "model": "work_order",
+      "name": "生产工单-表格",
+      "type": "grid"
+    },
+    "work_order_form": {
+      "body": {
+        "columns": [
+          {
+            "displayName": "工单编码",
+            "name": "code"
+          },
+          {
+            "displayName": "文创产品",
+            "name": "product"
+          },
+          {
+            "displayName": "计划数量",
+            "name": "planQty"
+          },
+          {
+            "displayName": "工单状态",
+            "name": "status"
+          },
+          {
+            "displayName": "计划日期",
+            "name": "planDate"
+          }
+        ],
+        "tabs": [],
+        "type": "form"
+      },
+      "mode": "primary",
+      "model": "work_order",
+      "name": "生产工单-表单",
+      "type": "form"
+    },
+    "work_order_search": {
+      "body": {
+        "columns": [
+          {
+            "displayName": "工单编码",
+            "name": "code"
+          },
+          {
+            "displayName": "文创产品",
+            "name": "product"
+          },
+          {
+            "displayName": "工单状态",
+            "name": "status"
+          }
+        ],
+        "type": "search"
+      },
+      "mode": "primary",
+      "model": "work_order",
+      "name": "生产工单-搜索",
+      "type": "search"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "menus": {
+    "cw_base_root_menu": {
+      "name": "cw_base_root_menu",
+      "display_name": "校园文创-基础数据",
+      "active": true,
+      "sequence": 10
+    },
+    "cw_product_menu": {
+      "name": "cw_product_menu",
+      "display_name": "文创产品",
+      "model": "product",
+      "view": "product_grid,product_search,product_form",
+      "sequence": 1,
+      "active": true,
+      "parent_ids": {
+        "@ref": "cw_base_root_menu"
+      }
+    },
+    "cw_material_menu": {
+      "name": "cw_material_menu",
+      "display_name": "物料管理",
+      "model": "material",
+      "view": "material_grid,material_search,material_form",
+      "sequence": 2,
+      "active": true,
+      "parent_ids": {
+        "@ref": "cw_base_root_menu"
+      }
+    },
+    "cw_product_bom_menu": {
+      "name": "cw_product_bom_menu",
+      "display_name": "产品BOM",
+      "model": "product_bom",
+      "view": "product_bom_grid,product_bom_search,product_bom_form",
+      "sequence": 3,
+      "active": true,
+      "parent_ids": {
+        "@ref": "cw_base_root_menu"
+      }
+    }
+  }
+}

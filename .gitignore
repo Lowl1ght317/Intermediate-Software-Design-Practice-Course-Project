@@ -1,0 +1,7 @@
+﻿target/
+*.class
+*.jar
+docs/preview/
+docs/preview.pdf
+docs/ppt_preview.pdf
+.flattened-pom.xml

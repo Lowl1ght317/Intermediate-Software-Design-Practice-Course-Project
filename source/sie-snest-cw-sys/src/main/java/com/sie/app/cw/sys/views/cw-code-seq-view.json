@@ -1,0 +1,57 @@
+{
+  "views": {
+    "code_seq_grid": {
+      "body": {
+        "buttons": [
+          {
+            "action": "preview",
+            "auth": "read",
+            "name": "详情"
+          }
+        ],
+        "columns": [
+          {
+            "displayName": "规则编码",
+            "name": "ruleCode",
+            "sortable": true,
+            "width": "120px"
+          },
+          {
+            "displayName": "日期段",
+            "name": "dateSeg",
+            "width": "120px"
+          },
+          {
+            "displayName": "当前流水值",
+            "name": "currValue"
+          }
+        ],
+        "tbar": [],
+        "type": "grid"
+      },
+      "mode": "primary",
+      "model": "code_seq",
+      "name": "编码流水-表格",
+      "type": "grid"
+    },
+    "code_seq_search": {
+      "body": {
+        "columns": [
+          {
+            "displayName": "规则编码",
+            "name": "ruleCode"
+          },
+          {
+            "displayName": "日期段",
+            "name": "dateSeg"
+          }
+        ],
+        "type": "search"
+      },
+      "mode": "primary",
+      "model": "code_seq",
+      "name": "编码流水-搜索",
+      "type": "search"
+    }
+  }
+}

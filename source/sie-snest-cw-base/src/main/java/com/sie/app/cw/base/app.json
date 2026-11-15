@@ -1,0 +1,24 @@
+{
+  "name": "cw-base",
+  "displayName": "校园文创-基础数据",
+  "author": "sie",
+  "company": "sie",
+  "category": "CW",
+  "product": "CW-BASE",
+  "description": "校园文创产品生产管理-基础数据（文创产品、物料、产品BOM）",
+  "summary": "校园文创基础数据",
+  "type": "SDK",
+  "tag": "master",
+  "version": "0.0.1",
+  "resolved": "com.sie.app.cw.base",
+  "dependencies": [],
+  "application": true,
+  "icon": null,
+  "license": "LGPL 3.0",
+  "view": [
+    "cw-product-view.json",
+    "cw-material-view.json",
+    "cw-product-bom-view.json"
+  ],
+  "data": []
+}
