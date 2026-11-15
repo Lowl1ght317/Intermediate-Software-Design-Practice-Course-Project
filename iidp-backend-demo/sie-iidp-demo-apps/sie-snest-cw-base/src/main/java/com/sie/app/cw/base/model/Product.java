@@ -23,7 +23,7 @@ public class Product extends BaseModel<Product> {
     @Property(displayName = "产品名称", displayForModel = true)
     private String name;
 
-    @Property(displayName = "产品编码")
+    @Property(displayName = "产品编码", unique = true, readonly = true, displayForModel = true)
     private String code;
 
     @Property(displayName = "规格")
@@ -102,5 +102,25 @@ public class Product extends BaseModel<Product> {
     @MethodService(name = "checkBom", displayName = "校验产品BOM", auth = "read")
     public java.util.Map<String, Object> checkBom(RecordSet rs, String productCode) {
         return new com.sie.app.cw.base.service.ProductService().checkBom(rs, productCode);
+    }
+
+    /**
+     * 重写平台自带的 create：界面上的「新增」也走编码服务取号。
+     * <p>
+     * 不重写时，界面新增走的是平台 create，code 由前端传入（通常为空），
+     * 结果列表里出现没有编码的产品，与“业务编码由编码规则生成”的要求冲突。
+     * 这里先把空编码补齐，再交回给父服务做真正的落库。
+     */
+    @MethodService(name = "create", displayName = "新增产品", auth = "create")
+    public RecordSet create(List<java.util.Map<String, Object>> valuesList) {
+        if (valuesList != null) {
+            for (java.util.Map<String, Object> values : valuesList) {
+                Object code = values.get("code");
+                if (code == null || String.valueOf(code).trim().isEmpty()) {
+                    values.put("code", com.sie.app.cw.base.service.CodeGenFacade.generate("CP"));
+                }
+            }
+        }
+        return (RecordSet) getMeta().get("product").callSuper(Product.class, "create", valuesList);
     }
 }

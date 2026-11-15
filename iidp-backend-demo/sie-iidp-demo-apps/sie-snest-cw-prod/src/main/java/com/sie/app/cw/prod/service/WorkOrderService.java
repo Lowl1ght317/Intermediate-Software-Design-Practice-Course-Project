@@ -104,6 +104,20 @@ public class WorkOrderService {
                 || ("2".equals(from) && "1".equals(to));
     }
 
+    /**
+     * 按主键变更状态，供列表行按钮调用：按钮把当前行整条传进来，这里再按 id 找到工单编码。
+     */
+    public Map<String, Object> changeStatusById(RecordSet rs, String id, String target) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("缺少工单 id，按钮未取到当前行");
+        }
+        WorkOrder order = new WorkOrder().select(Filter.equal("id", id), "id", "code", "status");
+        if (order == null) {
+            throw new IllegalArgumentException("工单不存在：" + id);
+        }
+        return changeStatus(rs, order.getCode(), target);
+    }
+
     private String label(String status) {
         if ("1".equals(status)) {
             return "草稿";

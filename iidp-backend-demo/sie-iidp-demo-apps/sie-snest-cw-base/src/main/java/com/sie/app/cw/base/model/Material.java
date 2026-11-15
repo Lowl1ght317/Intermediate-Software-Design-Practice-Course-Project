@@ -19,7 +19,7 @@ public class Material extends BaseModel<Material> {
     private String name;
 
     @Validate.NotBlank(message = "物料编码不能为空！")
-    @Property(displayName = "物料编码", unique = true)
+    @Property(displayName = "物料编码", unique = true, readonly = true, displayForModel = true)
     private String code;
 
     @Property(displayName = "规格")
@@ -82,5 +82,22 @@ public class Material extends BaseModel<Material> {
     @com.sie.snest.sdk.annotation.meta.MethodService(name = "findByCode", displayName = "按编码查物料", auth = "read")
     public Material findByCode(com.sie.snest.engine.data.RecordSet rs, String code) {
         return new com.sie.app.cw.base.service.MaterialService().findByCode(rs, code);
+    }
+
+    /**
+     * 重写平台自带的 create：界面新增物料时按 CP/MT 规则里的 MT 取号，避免出现空编码。
+     */
+    @com.sie.snest.sdk.annotation.meta.MethodService(name = "create", displayName = "新增物料", auth = "create")
+    public com.sie.snest.engine.data.RecordSet create(java.util.List<java.util.Map<String, Object>> valuesList) {
+        if (valuesList != null) {
+            for (java.util.Map<String, Object> values : valuesList) {
+                Object code = values.get("code");
+                if (code == null || String.valueOf(code).trim().isEmpty()) {
+                    values.put("code", com.sie.app.cw.base.service.CodeGenFacade.generate("MT"));
+                }
+            }
+        }
+        return (com.sie.snest.engine.data.RecordSet) getMeta().get("material")
+                .callSuper(Material.class, "create", valuesList);
     }
 }

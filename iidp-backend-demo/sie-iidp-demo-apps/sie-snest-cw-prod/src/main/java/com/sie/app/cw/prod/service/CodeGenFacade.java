@@ -20,7 +20,7 @@ import java.util.Map;
  * <p>
  * 取号顺序：查规则 → 算日期段 → 对流水行 FOR UPDATE 加锁 → 自增 → 回读 → 拼码。
  */
-final class CodeGenFacade {
+public final class CodeGenFacade {
 
     private static final Logger log = LoggerFactory.getLogger(CodeGenFacade.class);
 
@@ -36,7 +36,7 @@ final class CodeGenFacade {
      * @param ruleCode 规则标识，对应 cw_code_rule.rule_code
      * @return 形如 CP20261115-0001 的编码
      */
-    static String generate(String ruleCode) {
+    public static String generate(String ruleCode) {
         RelationDBAccessor accessor = ModelDataAccessFactory.getBussDataRelDBAccessor();
         accessor.execute("SELECT prefix, seq_length, date_format, `separator`, enabled FROM " + RULE_TABLE
                 + " WHERE rule_code = '" + escape(ruleCode) + "'");

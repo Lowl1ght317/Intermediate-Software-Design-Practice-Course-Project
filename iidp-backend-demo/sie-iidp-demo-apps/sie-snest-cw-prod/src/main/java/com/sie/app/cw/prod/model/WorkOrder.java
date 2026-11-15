@@ -26,7 +26,7 @@ import java.util.Date;
 public class WorkOrder extends BaseModel<WorkOrder> {
 
     @Validate.NotBlank(message = "工单编码不能为空！")
-    @Property(displayName = "工单编码", columnName = "code", unique = true, displayForModel = true, length = 64)
+    @Property(displayName = "工单编码", columnName = "code", unique = true, readonly = true, displayForModel = true, length = 64)
     private String code;
 
     @ManyToOne(targetModel = "product", displayName = "文创产品")
@@ -103,5 +103,49 @@ public class WorkOrder extends BaseModel<WorkOrder> {
     @MethodService(name = "changeStatus", displayName = "工单状态迁移", auth = "update")
     public java.util.Map<String, Object> changeStatus(RecordSet rs, String code, String target) {
         return new com.sie.app.cw.prod.service.WorkOrderService().changeStatus(rs, code, target);
+    }
+
+    /**
+     * 列表行按钮「下达」：草稿 → 已下达。
+     * 行按钮不会把当前行作为方法参数传进来，引擎把选中行放在 RecordSet 里，所以这里只声明 rs。
+     */
+    @MethodService(name = "issueById", displayName = "下达工单", auth = "update")
+    public java.util.Map<String, Object> issueById(RecordSet rs) {
+        return new com.sie.app.cw.prod.service.WorkOrderService().changeStatusById(rs, rowId(rs), "2");
+    }
+
+    /** 列表行按钮「报完工」：已下达 → 已完工。 */
+    @MethodService(name = "finishById", displayName = "报完工", auth = "update")
+    public java.util.Map<String, Object> finishById(RecordSet rs) {
+        return new com.sie.app.cw.prod.service.WorkOrderService().changeStatusById(rs, rowId(rs), "3");
+    }
+
+    /** 取当前行的主键：优先 rs.getId()，退回 rs.getIds()[0]。 */
+    private String rowId(RecordSet rs) {
+        if (rs == null) {
+            return null;
+        }
+        String id = rs.getId();
+        if (id != null && !id.isEmpty()) {
+            return id;
+        }
+        String[] ids = rs.getIds();
+        return ids != null && ids.length > 0 ? ids[0] : null;
+    }
+
+    /**
+     * 重写平台自带的 create：界面新增工单时按 WO 规则取号。
+     */
+    @MethodService(name = "create", displayName = "新增工单", auth = "create")
+    public RecordSet create(java.util.List<java.util.Map<String, Object>> valuesList) {
+        if (valuesList != null) {
+            for (java.util.Map<String, Object> values : valuesList) {
+                Object code = values.get("code");
+                if (code == null || String.valueOf(code).trim().isEmpty()) {
+                    values.put("code", com.sie.app.cw.prod.service.CodeGenFacade.generate("WO"));
+                }
+            }
+        }
+        return (RecordSet) getMeta().get("work_order").callSuper(WorkOrder.class, "create", valuesList);
     }
 }

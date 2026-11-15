@@ -4,6 +4,20 @@
       "body": {
         "buttons": [
           {
+            "action": "issue",
+            "auth": "update",
+            "model": "work_order",
+            "name": "下达",
+            "service": "issueById"
+          },
+          {
+            "action": "finish",
+            "auth": "update",
+            "model": "work_order",
+            "name": "报完工",
+            "service": "finishById"
+          },
+          {
             "action": "preview",
             "auth": "read",
             "name": "详情"
